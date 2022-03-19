@@ -17,7 +17,7 @@
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control"
                                        name="name" readonly
-                                       value="{{ Auth::user()->name }}"
+                                       {{--value="{{ Auth::user()->name }}"--}}
                                        required autocomplete="name" autofocus>
                             </div>
                         </div>
