@@ -20,8 +20,11 @@ class RegisterMVController extends Controller
         //return $request;
         //save into motor vehicle tables
         try {
+            $max_id = MotorVehicle::max('id') + 1;
+
             DB::transaction(function () use ($request){
                 MotorVehicle::create([
+                    'id' => $max_id,
                     'name' => $request->name,
                     'reg_no' => $request->reg_no,
                     'year_of_man' => $request->year_of_manufacture,
