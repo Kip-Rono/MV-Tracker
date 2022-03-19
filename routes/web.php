@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MV\RegisterMVController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//register mv view
+Route::get('/register_mv', [RegisterMVController::class, 'index'])->name('register_mv');
+//save MV registration
+Route::post('/save_register_mv', [RegisterMVController::class, 'saveRegisterMV'])->name('save_register_mv');
