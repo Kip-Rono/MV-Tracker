@@ -10,7 +10,7 @@ class MotorVehicle extends Model
     use HasFactory;
     protected $table = 'motor_vehicle';
     public $timestamps = false;
-    public $incrementing = false;
+    public $incrementing = true;
 
     protected $fillable = [
         'id',
