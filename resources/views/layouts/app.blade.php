@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'MV-TRacker') }}</title>
+    <title>{{ config('app.name', 'MV-Tracker') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -26,7 +26,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'MV-Tracker') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -101,7 +101,7 @@
                             </a>
                         </li>
                         <li className="nav-item active">
-                            <a href="" className="nav-link">
+                            <a href="{{url('update_mv')}}" className="nav-link">
                                 <i class="nav-icon far fa-building"></i>
                                 <p>Update MV Details
                                     <i className="right fas fa-angle-left"></i>
@@ -109,7 +109,7 @@
                             </a>
                         </li>
                         <li className="nav-item active">
-                            <a href="" className="nav-link">
+                            <a href="{{url('list_mvs')}}" className="nav-link">
                                 <i class="nav-icon far fa-building"></i>
                                 <p>List Motor Vehicles
                                     <i className="right fas fa-angle-left"></i>

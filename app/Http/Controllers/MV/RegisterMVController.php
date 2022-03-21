@@ -15,6 +15,15 @@ class RegisterMVController extends Controller
         return view('MV/register_mv');
     }
 
+    public function fetchMVDetails(){
+        return view('MV/update_mv');
+    }
+
+    //list all MVs view
+    public function listAllMVs(){
+        return view('MV/list_all_mvs');
+    }
+
     //save MV regsitration
     public function saveRegisterMV(Request $request){
         //return $request;
@@ -24,7 +33,7 @@ class RegisterMVController extends Controller
 
             DB::transaction(function () use ($request){
                 MotorVehicle::create([
-                    'id' => $max_id,
+                    //'id' => $max_id,
                     'name' => $request->name,
                     'reg_no' => $request->reg_no,
                     'year_of_man' => $request->year_of_manufacture,

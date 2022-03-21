@@ -4,8 +4,29 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Register MV</div>
+            <form id="search_mv_form mb-5">
+            <div class="row">
+
+
+                <label for="name" class="col-md-3 col-form-label text-md-end">Enter Reg No:</label>
+
+                <div class="col-md-6">
+                    <input id="reg_no_val" type="text" class="form-control"
+                           name="reg_no_val"
+                           value=""
+                           required autocomplete="name" autofocus>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-outline-success" type="button"
+                            onclick="SearchMV()">
+                        Search
+                    </button>
+                </div>
+            </div>
+            </form>
+            <div class="card mt-3">
+
+                <div class="card-header">Update MV</div>
 
                 <div class="card-body">
                     {{--<form method="POST" action="{{ route('register_mv') }}">--}}
@@ -26,7 +47,7 @@
 
                             <div class="col-md-6">
                                 <input id="reg_no" type="text" class="form-control"
-                                       name="reg_no"
+                                       name="reg_no" readonly
                                        required autocomplete="name" autofocus>
                             </div>
                         </div>
@@ -35,7 +56,7 @@
 
                             <div class="col-md-6">
                                 <input id="year_of_manufacture" type="text" class="form-control"
-                                       name="year_of_manufacture"
+                                       name="year_of_manufacture" readonly
                                        required autocomplete="name" autofocus>
                             </div>
                         </div>
@@ -72,9 +93,40 @@
 @push('custom-scripts')
     <script type="text/javascript">
         //save function
+        function SearchMV(){
+            const reg_no = document.getElementById('reg_no_val').value;
+            const reg_no = document.getElementById('name').value;
+            console.log(reg_no);
+            const query = `
+                    query{
+                        motorVehicleOne{
+                            reg_no,
+                        }
+                    }
+                `;
+            fetch("http://127.0.0.1:8000/graphql", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                body:JSON.stringify({
+                    query,
+                    variables: {
+                        input: {
+                            reg_no,
+                            name,
+                        }
+                    }
+                })
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                console.log(data);
+            });
+        }
 
-
-        function registerMV(){
+        function updateMV(){
 
             //e.preventDefault();
             //check if registration has been entered
