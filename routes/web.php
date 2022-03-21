@@ -15,13 +15,20 @@ use App\Http\Controllers\MV\RegisterMVController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
 
 //Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//login blade
+Route::get('/login_user', [App\Http\Controllers\UserLoginController::class, 'loginUser'])->name('login');
+Route::get('/logout', [App\Http\Controllers\HomeController::class, 'logout'])->name('logout');
+Route::get('/register', [App\Http\Controllers\UserLoginController::class, 'register'])->name('register');
 //register mv view
 Route::get('/register_mv', [RegisterMVController::class, 'index'])->name('register_mv');
+Route::get('/update_mv', [RegisterMVController::class, 'fetchMVDetails'])->name('update_mv');
+//list all mvs view
+Route::get('/list_mvs', [RegisterMVController::class, 'listAllMVs'])->name('list_mvs');
 //save MV registration
 Route::post('/save_register_mv', [RegisterMVController::class, 'saveRegisterMV'])->name('save_register_mv');

@@ -1,45 +1,221 @@
-"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`."
+"A datetime string with format 'Y-m-d H:i:s', e.g. '2018-01-01 13:00:00'."
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
-"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+"A date string with format 'Y-m-d', e.g. '2011-05-23'."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
-#type Query {
-#    users: [User!]! @all
-#    user(id: Int! @eq): User @find
-#
-#}
-
-type Query {
-#    users: [User!]! @paginate(type: "paginator" model: "App\\Models\\User")
-    users: [User!]! @guard(with: ["api"]) @paginate(type: "paginator" model: "App\\Models\\User")
-    user(id: ID @eq): User @find(model: "App\\User")
+type Query @protect(guards: ["api"]) {
+    users: [User!]! @all(model: "App\\Models\\User")
+    user(id: ID @eq): User @find(model: "App\\Models\\User")
+    motorVehicles: [MotorVehicle!]! @all(model: "App\\Models\\MotorVehicle")
+    motorVehicle(id: ID @eq): MotorVehicle @find(model: "App\\Models\\MotorVehicle")
 }
 
-extend type Mutation {
-    login(input: LoginInput @spread): AuthPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Login@resolve")
-    refreshToken(input: RefreshTokenInput @spread): RefreshTokenPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\RefreshToken@resolve")
-    logout: LogoutResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Logout@resolve")
-    forgotPassword(input: ForgotPasswordInput! @spread): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ForgotPassword@resolve")
-    updateForgottenPassword(input: NewPasswordWithCodeInput @spread): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ResetPassword@resolve")
-    register(input: RegisterInput @spread): RegisterResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Register@resolve")
-    socialLogin(input: SocialLoginInput! @spread): AuthPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\SocialLogin@resolve")
-    verifyEmail(input: VerifyEmailInput! @spread): AuthPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\VerifyEmail@resolve")
-    updatePassword(input: UpdatePassword! @spread): UpdatePasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\UpdatePassword@resolve") @guard(with: ["api"])
-}
+type Mutation {
+    login(data: LoginInput): LoginResponse! @field(resolver: "App\\GraphQL\\Mutations\\LoginResolver@__invoke")
+    logout: LogoutResponse! @protect(guards: ["api"]) @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Logout@resolve")
+    forgotPassword(data: ForgotPasswordInput!): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ForgotPassword@resolve")
+    updateForgottenPassword(data: NewPasswordWithCodeInput): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ResetPassword@resolve")
+    #register(data: RegisterInput!) : RegisterResponse! @field(resolver: "App\\GraphQL\\Resolvers\\RegisterResolver@resolve")
+    #checkDomain(fqdn: String!) : CheckDomainResponse! @field(resolver: "App\\GraphQL\\Resolvers\\CheckDomainResolver@resolve")
 
-#type User {
-#    id: ID!
-#    name: String!
-#    email: String!
-#    password: String!
-#}
+    createUser(
+        name: String @rules(apply: ["required"])
+        email: String @rules(apply: ["required", "email", "unique:users,email"])
+        #password1: String @rules(apply: ["required", "password", "unique:users,email"])
+        #password2: String @rules(apply: ["required", "password", "unique:users,email"])
+    ): User @create(model: "App\\Models\\User")
+    #    updateUser(
+    #        id: ID @rules(apply: ["required"])
+    #        name: String
+    #        email: String @rules(apply: ["email"])
+    #    ): User @update(model: "App\\User")
+    #    deleteUser(
+    #        id: ID @rules(apply: ["required"])
+    #    ): User @delete(model: "App\\User")
+    createMotorVehicle(
+        name: String @rules(apply: ["required", "string", "max:255"])
+        reg_no: String @rules(apply: ["required", "string", "max:255"])
+        year_of_man: String @rules(apply: ["required", "string", "max:255"])
+        vehicle_type: String
+        tonnage: String
+    ): MotorVehicle @create(model: "App\\Models\\MotorVehicle")
+    updateMotorVehicle(
+        id: ID @rules(apply: ["required"])
+        name: String @rules(apply: ["string", "max:255"])
+        reg_no: String @rules(apply: ["string", "max:255"])
+        year_of_man: String @rules(apply: ["string", "max:255"])
+        vehicle_type: String
+        tonnage: String
+    ): MotorVehicle @update(model: "App\\Models\\MotorVehicle")
+    #    deleteTicket(
+    #        id: ID! @rules(apply: ["required"])
+    #    ): Ticket @delete(model: "App\\Ticket")
+}
 
 type User {
     id: ID!
     name: String!
     email: String!
-    password: String!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type MotorVehicle {
+    id: ID!
+    name: String!
+    reg_no: String!
+    year_of_man: String!
+    vehicle_type: String!
+    tonnage: String!
     created_at: DateTime!
     updated_at: DateTime!
 }
+
+
+
+
+
+
+
+# Before Schema
+#"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`."
+#scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+#
+#"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+#scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+#
+##type Query {
+##    users: [User!]! @all
+##    user(id: Int! @eq): User @find
+##
+##}
+#
+#type Query {
+#    # users: [User!]! @paginate(type: "paginator" model: "App\\Models\\User")
+#    # query - fetch all users
+#    users: [User!]! @guard(with: ["api"]) @paginate(type: "paginator" model: "App\\Models\\User")
+#    # query - fetch user
+#    user(id: ID @eq): User @find(model: "App\\Models\\User")
+#    # query motor vehicles
+#    motorVehicle(reg_no: ID @eq): MotorVehicle @find(model: "App\\Models\\MotorVehicle")
+#    motorVehicleOne(reg_no: ID @eq, name: String @eq): MotorVehicle @find(model: "App\\Models\\MotorVehicle")
+#    motorVehicles: [MotorVehicle!]! @guard(with: ["api"]) @paginate(type: "paginator" model: "App\\Models\\MotorVehicle")
+#}
+#
+#extend type Mutation {
+#    refreshToken(input: RefreshTokenInput @spread): RefreshTokenPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\RefreshToken@resolve")
+#    forgotPassword(input: ForgotPasswordInput! @spread): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ForgotPassword@resolve")
+#    updateForgottenPassword(input: NewPasswordWithCodeInput @spread): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ResetPassword@resolve")
+#    register(input: RegisterInput @spread): RegisterResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Register@resolve")
+#    socialLogin(input: SocialLoginInput! @spread): AuthPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\SocialLogin@resolve")
+#    verifyEmail(input: VerifyEmailInput! @spread): AuthPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\VerifyEmail@resolve")
+#    updatePassword(input: UpdatePassword! @spread): UpdatePasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\UpdatePassword@resolve") @guard(with: ["api"])
+#
+#    # login user
+##    login(
+##        input: LoginInput @spread
+##    ): AuthPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Login@resolve")
+#
+#
+#    #login user - using resolver
+#    login(data: LoginInput): Boolean!
+#    @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Login@resolve")
+#
+#    # logout user
+#    logout: LogoutResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Logout@resolve")
+#
+#    # create user mutation - register
+#    createUser(
+#        name: String @rules(apply: ["required"])
+#        email: String @rules(apply: ["required", "email", "unique:users, email"])
+#    ): User @create(model: "App\\Models\\User")
+#
+##   save / create MV details mutation
+#    createMVDetails( data: UserInput!
+#
+#        #id: ID! @rules(apply: ["required"])
+#        #name: String! @rules(apply: ["required"])
+##        reg_no: String! @rules(apply: ["required"])
+##        year_of_man: String! @rules(apply: ["required"])
+##        vehicle_type: String! @rules(apply: ["string", "max:255"])
+##        tonnage: String!
+##        created_at: DateTime!
+##        updated_at: DateTime!
+#
+#    ): MotorVehicle @create(model: "App\\Models\\MotorVehicle")
+#
+#    #   query / create MV details
+#    updateMVDetails(
+#        id: ID! @rules(apply: ["required"])
+#        name: String! @rules(apply: ["required"])
+#        reg_no: String! @rules(apply: ["required"])
+#        year_of_man: String! @rules(apply: ["required"])
+#        vehicle_type: String! @rules(apply: ["string", "max:255"])
+#        tonnage: String!
+#        created_at: DateTime!
+#        updated_at: DateTime!
+#    ): MotorVehicle @update(model: "App\\Models\\MotorVehicle")
+#
+#}
+#
+##type User {
+##    id: ID!
+##    name: String!
+##    email: String!
+##    password: String!
+##}
+#
+#
+#type LogoutResponse {
+#    status: String!
+#    message: String
+#}
+#
+#type RegisterResponse {
+#    status: String!
+#    message: String!
+#    redirect: String!
+#}
+#
+#input RegisterInput {
+#    name: String @rules(apply: ["required"])
+#    email: String @rules(apply: ["required"])
+#    password: String @rules(apply: ["required"])
+#    password_confirmation: String @rules(apply: ["required"])
+#}
+#
+#type User {
+#    id: ID!
+#    name: String!
+#    email: String!
+#    password: String!
+#    created_at: DateTime!
+#    updated_at: DateTime!
+#}
+#
+#input UserInput {
+#    id: ID!
+#    name: String!
+#    email: String!
+#    password: String!
+#    created_at: DateTime!
+#    updated_at: DateTime!
+#}
+#
+#type MotorVehicle {
+#    id: ID!
+#    name: String!
+#    reg_no: String!
+#    year_of_man: String!
+#    vehicle_type: String!
+#    tonnage: String!
+#    created_at: DateTime!
+#    updated_at: DateTime!
+#}
+#
+#input LoginInput {
+#    email: String!
+#    password: String!
+#}
+#
