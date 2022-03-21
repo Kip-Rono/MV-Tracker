@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use GraphQL\Type\Schema;
+//use GraphQL\Type\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
