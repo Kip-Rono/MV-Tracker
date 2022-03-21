@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use GraphQL\Type\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
