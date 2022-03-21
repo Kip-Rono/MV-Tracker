@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ResolveInfo;
+use http\Cookie;
 use Illuminate\Support\Facades\Auth;
 use Nuwave\Lighthouse\Exceptions\AuthenticationException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -22,12 +23,13 @@ class LoginResolver
         //return [$rootValue, $args, $context, $resolveInfo];
         if (! Auth::once(['email' => $args['data']['email'], 'password' => $args['data']['password']])) {
             //return ['request'=>'error'];
-            throw new AuthenticationException('Authentication Failed');
+            throw new AuthenticationException('Authentication Failed. Username or password is incorrect');
             return ['message' => 'Authentication failed. Username or password is incorrect'];
         }
 
         //Create Personal Access Token and return a JWT
-        if (! $context->request->hasCookie('_token')) {
+        else {
+//            mutation
             //return ['request'=>'success'];
             $user = auth()->user();
             $token = Auth::user()->createToken('Access Token')->accessToken;
@@ -35,7 +37,8 @@ class LoginResolver
 
             return [
                 'token' => $token,
-                'name' => $user
+                'name' => $user,
+                'response' => 'Login Successful'
             ];
         }
         return ['request'=>'none'];

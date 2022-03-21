@@ -4,53 +4,39 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 "A date string with format 'Y-m-d', e.g. '2011-05-23'."
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
-type Query @protect(guards: ["api"]) {
+type Query {
     users: [User!]! @all(model: "App\\Models\\User")
     user(id: ID @eq): User @find(model: "App\\Models\\User")
+    motorVehicle(reg_no: String! @eq): MotorVehicle @find(model: "App\\Models\\MotorVehicle")
+    #motorVehicle(name: String! @eq): MotorVehicle @find(model: "App\\Models\\MotorVehicle")
     motorVehicles: [MotorVehicle!]! @all(model: "App\\Models\\MotorVehicle")
-    motorVehicle(id: ID @eq): MotorVehicle @find(model: "App\\Models\\MotorVehicle")
+
+}
+
+input nameInput {
+    name: String!
+}
+
+input reg_no {
+    reg_no: String!
 }
 
 type Mutation {
     login(data: LoginInput): LoginResponse! @field(resolver: "App\\GraphQL\\Mutations\\LoginResolver@__invoke")
-    logout: LogoutResponse! @protect(guards: ["api"]) @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Logout@resolve")
+    logout: LogoutResponse!  @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Logout@resolve")
     forgotPassword(data: ForgotPasswordInput!): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ForgotPassword@resolve")
     updateForgottenPassword(data: NewPasswordWithCodeInput): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ResetPassword@resolve")
     #register(data: RegisterInput!) : RegisterResponse! @field(resolver: "App\\GraphQL\\Resolvers\\RegisterResolver@resolve")
     #checkDomain(fqdn: String!) : CheckDomainResponse! @field(resolver: "App\\GraphQL\\Resolvers\\CheckDomainResolver@resolve")
 
-    createUser(
-        name: String @rules(apply: ["required"])
-        email: String @rules(apply: ["required", "email", "unique:users,email"])
-        #password1: String @rules(apply: ["required", "password", "unique:users,email"])
-        #password2: String @rules(apply: ["required", "password", "unique:users,email"])
-    ): User @create(model: "App\\Models\\User")
-    #    updateUser(
-    #        id: ID @rules(apply: ["required"])
-    #        name: String
-    #        email: String @rules(apply: ["email"])
-    #    ): User @update(model: "App\\User")
-    #    deleteUser(
-    #        id: ID @rules(apply: ["required"])
-    #    ): User @delete(model: "App\\User")
-    createMotorVehicle(
-        name: String @rules(apply: ["required", "string", "max:255"])
-        reg_no: String @rules(apply: ["required", "string", "max:255"])
-        year_of_man: String @rules(apply: ["required", "string", "max:255"])
-        vehicle_type: String
-        tonnage: String
-    ): MotorVehicle @create(model: "App\\Models\\MotorVehicle")
-    updateMotorVehicle(
-        id: ID @rules(apply: ["required"])
-        name: String @rules(apply: ["string", "max:255"])
-        reg_no: String @rules(apply: ["string", "max:255"])
-        year_of_man: String @rules(apply: ["string", "max:255"])
-        vehicle_type: String
-        tonnage: String
-    ): MotorVehicle @update(model: "App\\Models\\MotorVehicle")
-    #    deleteTicket(
-    #        id: ID! @rules(apply: ["required"])
-    #    ): Ticket @delete(model: "App\\Ticket")
+    createUser(data: RegisterInput): RegisterResponse! @field(resolver: "App\\GraphQL\\Mutations\\RegisterUserResolver@__invoke")
+
+    createMotorVehicle(data: MotorVehicleInput): SaveMotorVehicleResponse! @field(resolver: "App\\GraphQL\\Mutations\\RegisterMotorVehicleResolver@__invoke")
+
+    #updateMVDetails(reg_no: reg_no, data: MotorVehicleInput): updateMotorVehicleResponse! @field(resolver: "App\\GraphQL\\Mutations\\UpdateMotorVehicleResolver@__invoke")
+    updateMVDetails(reg_no: reg_no, data: MotorVehicleInput): MotorVehicle @update
+
+    #updateMVDetails(reg_no: String!, input: MotorVehicleInput): updateMotorVehicleResponse
 }
 
 type User {
@@ -67,7 +53,7 @@ type MotorVehicle {
     reg_no: String!
     year_of_man: String!
     vehicle_type: String!
-    tonnage: String!
+    tonnage: String!  nullable: true
     created_at: DateTime!
     updated_at: DateTime!
 }

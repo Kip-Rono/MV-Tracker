@@ -3,13 +3,54 @@ input LoginInput {
     password: String!
 }
 
-#type LoginResponse {
-#    request: String
-#}
-
 type LoginResponse {
     token: String
     user: User
+    message: String
+}
+
+input RegisterInput {
+    name: String @rules(apply: ["required"])
+    email: String @rules(apply: ["required"])
+    password1: String @rules(apply: ["required"])
+    password2: String @rules(apply: ["required"])
+    updated_at: DateTime
+}
+
+type RegisterResponse {
+    response: String!
+    #message: String!
+}
+
+input MotorVehicleInput {
+    name: String @rules(apply: ["required"])
+    reg_no: String @rules(apply: ["required"])
+    year_of_man: String @rules(apply: ["required"])
+    vehicle_type: String
+    tonnage: String
+}
+
+type SaveMotorVehicleResponse {
+response: String!
+#message: String!
+}
+
+type updateMotorVehicleResponse {
+response: String!
+#message: String!
+}
+
+
+input OneMotorVehicleInput {
+reg_no: String @rules(apply: ["required"])
+}
+
+type fetchMotorVehicleResponse {
+    name: String!
+    reg_no: String!
+    year_of_man: String
+    vehicle_type: String
+    tonnage: Tonnage
 }
 
 type LogoutResponse {
@@ -38,11 +79,7 @@ type CheckDomainResponse {
     message: String!
 }
 
-type RegisterResponse {
-    status: String!
-    message: String!
-    redirect: String!
-}
+
 type AuthPayload {
     access_token: String
     refresh_token: String
@@ -51,13 +88,7 @@ type AuthPayload {
     user: User
 }
 
-input RegisterInput {
-    name: String @rules(apply: ["required"])
-    email: String @rules(apply: ["required"])
-    fqdn: String @rules(apply: ["required", "unique:system.hostnames,fqdn"])
-    password: String @rules(apply: ["required"])
-    password_confirmation: String @rules(apply: ["required"])
-}
+
 
 #extend type Mutation {
 #    login(data: LoginInput): Boolean!

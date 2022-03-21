@@ -75,7 +75,8 @@
                     mutation($data: LoginInput){
                         login(data: $data){
                             token,
-                            user{email}
+                            user{email},
+                            response
                         }
                     }
                 `;
@@ -99,6 +100,14 @@
                 return response.json();
             }).then(data => {
                 console.log(data);
+                if (data){
+                    //locale storage
+                    const username = localStorage.setItem("username", data.name);
+                    alert(data.login.response)
+                }
+
+            }).then((errors)=> {
+                alert(errors[0].message)
             });
         }
     </script>
