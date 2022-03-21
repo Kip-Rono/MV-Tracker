@@ -16,7 +16,7 @@
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control"
-                                       name="name" readonly
+                                       name="name"
                                        value=""
                                        required autocomplete="name" autofocus>
                             </div>
@@ -31,7 +31,7 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="reg_no" class="col-md-4 col-form-label text-md-end">Year Of Manufacture:</label>
+                            <label for="year_of_manufacture" class="col-md-4 col-form-label text-md-end">Year Of Manufacture:</label>
 
                             <div class="col-md-6">
                                 <input id="year_of_manufacture" type="text" class="form-control"
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="reg_no" class="col-md-4 col-form-label text-md-end">Vehicle Type:</label>
+                            <label for="vehicle_type" class="col-md-4 col-form-label text-md-end">Vehicle Type:</label>
 
                             <div class="col-md-6">
                                 <input id="vehicle_type" type="text" class="form-control"
@@ -48,16 +48,16 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="reg_no" class="col-md-4 col-form-label text-md-end">Tonnage:</label>
+                            <label for="tonnage" class="col-md-4 col-form-label text-md-end">Tonnage:</label>
 
                             <div class="col-md-6">
-                                <input id="tonnage" type="text" class="form-control"
+                                <input id="tonnage" type="number" class="form-control"
                                        name="tonnage" autofocus>
                             </div>
                         </div>
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="button" class="btn btn-primary" onclick="registerMV()">
+                                <button type="button" class="btn btn-primary" onclick="handleCreateMV()">
                                     Submit
                                 </button>
                             </div>
@@ -71,60 +71,30 @@
 @endsection
 @push('custom-scripts')
     <script type="text/javascript">
-        //save function
+        function handleCreateMV() {
 
-
-        function registerMV(){
-
-            //e.preventDefault();
-            //check if registration has been entered
-            let reg_no = document.getElementById('reg_no').value;
-            let year_of_man = document.getElementById('year_of_manufacture').value;
-            console.log(reg_no, year_of_man)
-            if (reg_no === '' || year_of_man === ''){
-                alert('Notice ! Please Enter Registration Plates and Year of Manufacture ')
-            }else{
-                //generate csrf token for security
-                // $.ajaxSetup({
-                //     headers: {
-                //         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                //     }
-                // })
-                //ajax post request ... get form data
-                var frmData = $('#register_mv_form').serialize();
-                const name = document.getElementById('name').value;
-                const reg_no = document.getElementById('reg_no').value;
-                const year_of_man = document.getElementById('year_of_manufacture').value;
-                const vehicle_type = document.getElementById('vehicle_type').value;
-                const tonnage = document.getElementById('tonnage').value;
-
-                console.log(frmData);
-                // $.ajax({
-                //     type: 'POST',
-                //     url: 'save_register_mv',
-                //     data: frmData,
-                //     success: function (data){
-                //         if (data.response){
-                //             console.log(data);
-                //             alert(data.response);
-                //             window.location.reload();
-                //         }
-                //         else{
-                //             alert('Error ! Save Failed. Check All Entries');
-                //         }
-                //     },
-                //     error: function (data) {
-                //         console.log(data.response);
-                //     }
-                // })
+            //var data = $('#register_form').serialize();
+            var name = document.getElementById('name').value;
+            var reg_no = document.getElementById('reg_no').value;
+            var year_of_man = document.getElementById('year_of_manufacture').value;
+            var vehicle_type = document.getElementById('vehicle_type').value;
+            var tonnage = document.getElementById('tonnage').value;
+            if (!reg_no || !year_of_man) {
+                alert('Enter Registration No. and/or Year of Manufacture');
+            } else {
+                var data = {
+                    "data": {
+                        "name": name,
+                        "reg_no": reg_no,
+                        "year_of_man": year_of_man,
+                        "vehicle_type": vehicle_type,
+                        "tonnage": tonnage,
+                    }
+                }
                 const query = `
-                    mutation{
-                        createMVDetails{
-                            name,
-                            reg_no,
-                            year_of_man,
-                            vehicle_type,
-                            tonnage
+                    mutation($data: MotorVehicleInput){
+                        createMotorVehicle(data: $data){
+                            response
                         }
                     }
                 `;
@@ -134,22 +104,31 @@
                         "Content-Type": "application/json",
                         "Accept": "application/json",
                     },
-                    body:JSON.stringify({
+                    body: JSON.stringify({
                         query,
                         variables: {
-                            input: {
-                                name,
-                                reg_no,
-                                year_of_man,
-                                vehicle_type,
-                                tonnage
+                            data: {
+                                name: name,
+                                reg_no: reg_no,
+                                year_of_man: year_of_man,
+                                vehicle_type: vehicle_type,
+                                tonnage: tonnage
                             }
-                        }
+                        },
                     })
                 }).then(response => {
                     return response.json();
                 }).then(data => {
                     console.log(data);
+                    if (data){
+                        alert(data.createMotorVehicle.response);
+                    }
+
+                }).catch((error) => {
+                    console.log(error);
+                    if(error){
+                        alert(data.createMotorVehicle.response)
+                    }
                 });
             }
         }
