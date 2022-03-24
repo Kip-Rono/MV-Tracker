@@ -53,12 +53,14 @@
 @endsection
 @push('custom-scripts')
     <script type="text/javascript">
-        function listMVs(){
+        function listMVs() {
             const name = document.getElementById('username').value;
             const query = `
                 query($name: String!){
                         userMotorVehicle(name: $name){
-                            [name, reg_no, year_of_man, vehicle_type, tonnage]
+                            data {
+                                name, reg_no, year_of_man, vehicle_type, tonnage
+                            }
                         }
                     }
             `;
@@ -68,7 +70,7 @@
                     "Content-Type": "application/json",
                     "Accept": "application/json",
                 },
-                body:JSON.stringify({
+                body: JSON.stringify({
                     query,
                     variables: {
                         name: name,
