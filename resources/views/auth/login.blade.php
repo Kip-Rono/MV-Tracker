@@ -75,7 +75,7 @@
                     mutation($data: LoginInput){
                         login(data: $data){
                             token,
-                            user{email},
+                            user,
                             response
                         }
                     }

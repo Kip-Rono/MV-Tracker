@@ -5,7 +5,7 @@ input LoginInput {
 
 type LoginResponse {
     token: String
-    name: User
+    name: String
     response: String
 }
 
