@@ -62,6 +62,8 @@
     <script type="text/javascript">
         function handleLogin() {
             //var data = $('#login_form').serialize();
+            const BASE_URL = "127.0.0.1:8000/graphql";
+            const GRAPHQL_URL = "https://mvs-tracker.herokuapp.com/graphql";
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
             var data = {
@@ -79,7 +81,7 @@
                         }
                     }
                 `;
-            fetch("https://mvs-tracker.herokuapp.com/graphql", {
+            fetch(GRAPHQL_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
