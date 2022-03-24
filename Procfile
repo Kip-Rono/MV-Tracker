@@ -1,2 +1,3 @@
 web: vendor/bin/heroku-php-apache2 public/
-release: rake db:migrate
+web: bundle exec rails s
+release: rails db:migrate
