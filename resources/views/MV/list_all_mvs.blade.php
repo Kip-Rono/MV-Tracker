@@ -54,7 +54,7 @@
 @push('custom-scripts')
     <script type="text/javascript">
         function listMVs(){
-            const name = document.getElementById('username')
+            const name = document.getElementById('username').value;
             const query = `
                 query($name: String!){
                         userMotorVehicle(name: $name){
