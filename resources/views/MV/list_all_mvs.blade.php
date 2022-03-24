@@ -58,7 +58,7 @@
             const query = `
                 query($name: String!){
                         userMotorVehicle(name: $name){
-                            name, reg_no, year_of_man, vehicle_type, tonnage
+                            [name, reg_no, year_of_man, vehicle_type, tonnage]
                         }
                     }
             `;
