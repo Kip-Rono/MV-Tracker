@@ -23,8 +23,11 @@ class LoginResolver
         //return [$rootValue, $args, $context, $resolveInfo];
         if (! Auth::once(['email' => $args['data']['email'], 'password' => $args['data']['password']])) {
             //return ['request'=>'error'];
-            throw new AuthenticationException('Authentication Failed. Username or password is incorrect');
-            return ['message' => 'Authentication failed. Username or password is incorrect'];
+            //throw new AuthenticationException('Authentication Failed. Username or password is incorrect');
+            return [
+                'token' => '',
+                'response' => 'Authentication failed. Username or password is incorrect'
+            ];
         }
 
         //Create Personal Access Token and return a JWT

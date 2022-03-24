@@ -104,9 +104,12 @@
                     const username = localStorage.setItem("username", data.name);
                     alert(data.login.response)
                 }
+                if (errors){
+                    alert(errors[0].message)
+                }
 
             }).then((errors)=> {
-                alert(errors[0].message)
+                console.log(errors)
             });
         }
     </script>
