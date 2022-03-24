@@ -2,9 +2,12 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\User;
+use Facade\Ignition\QueryRecorder\Query;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ResolveInfo;
 use http\Cookie;
+use http\QueryString;
 use Illuminate\Support\Facades\Auth;
 use Nuwave\Lighthouse\Exceptions\AuthenticationException;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -19,10 +22,10 @@ class LoginResolver
     {
         // TODO implement the resolver
         //$args = (object)$args;
-        //return ['request' => $args];
-        //return [$rootValue, $args, $context, $resolveInfo];
-        if (! Auth::once(['email' => $args['data']['email'], 'password' => $args['data']['password']])) {
-            //return ['request'=>'error'];
+       //fetch user where name entered
+        $user = User::select('email', 'password')->where('email', $args['data']['email'])->get();
+
+        if ($args['data']['email'] != $user[0]->email ||  hash('sha256', $args['data']['password']) != $user[0]->password) {
             //throw new AuthenticationException('Authentication Failed. Username or password is incorrect');
             return [
                 'token' => '',
