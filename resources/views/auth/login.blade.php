@@ -105,11 +105,11 @@
                 if (data){
                     //locale storage
                     const username = localStorage.setItem("username", data.name);
-                    alert(data.login.response)
+                    alert(data.data.login.response)
                 }
 
-            }).then((errors)=> {
-                alert(errors[0].message)
+            }).catch((errors)=> {
+                alert(errors.errors.message)
             });
         }
     </script>
