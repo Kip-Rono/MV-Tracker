@@ -135,6 +135,7 @@
                     })
                 }).then(response => {
                     return response.json();
+<<<<<<< HEAD
                 }).then((data) => {
                     if (data){
                         //alert(data.createUser.response);
@@ -143,8 +144,18 @@
                     }
                     else{
                         alert('User Save Fail');
+=======
+                }).then(data => {
+                    if (data){
+                        alert(data.data.createUser.response);
+                        console.log(data);
+                    }
+                    else{
+                        alert(data.errors.createUser.response);
+>>>>>>> 068f474d8c0c0c96b534b217136d6cc6f2702cef
                     }
                 }).catch((error) => {
+                    alert(errors.errors.message)
                     console.log(error);
                     //alert('Save Failed')
                 });

@@ -104,14 +104,19 @@
                 if (data){
                     //locale storage
                     const username = localStorage.setItem("username", data.name);
-                    alert(data.login.response)
+                    alert(data.data.login.response)
                 }
                 if (errors){
                     alert(errors[0].message)
                 }
 
+<<<<<<< HEAD
             }).then((errors)=> {
                 console.log(errors)
+=======
+            }).catch((errors)=> {
+                alert(errors.errors.message)
+>>>>>>> 068f474d8c0c0c96b534b217136d6cc6f2702cef
             });
         }
     </script>

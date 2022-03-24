@@ -121,6 +121,7 @@
                 }).then(data => {
                     console.log(data);
                     if (data){
+<<<<<<< HEAD
                         //alert(data.createMotorVehicle.response);
                         alert('MV Created Successfully');
                     }
@@ -130,7 +131,17 @@
                     if(error){
                         //alert(data.createMotorVehicle.response)
                         alert('Save Fail !');
+=======
+                        alert(data.data.createMotorVehicle.response);
                     }
+                    else{
+                        alert(data.data.createMotorVehicle.response)
+>>>>>>> 068f474d8c0c0c96b534b217136d6cc6f2702cef
+                    }
+
+                }).catch((errors) => {
+                    console.log(errors);
+                        alert(errors.errors.message)
                 });
             }
         }
