@@ -125,7 +125,9 @@
                 document.getElementById('year_of_manufacture').value = data.data.motorVehicle.year_of_man
                 document.getElementById('vehicle_type').value = data.data.motorVehicle.vehicle_type
                 document.getElementById('tonnage').value = data.data.motorVehicle.tonnage
-            });
+            }).catch((errors) => {
+                alert(errors.errors.message)
+            })
         }
 
         function updateMV(){
@@ -183,14 +185,15 @@
                 }).then(data => {
                     console.log(data);
                     if (data){
-                        alert(data.createMotorVehicle.response);
+                        alert(data.data.updateMVDetails.response);
+                    }
+                    else{
+                        alert(data.data.updateMVDetails.response)
                     }
 
-                }).catch((error) => {
-                    console.log(error);
-                    if(error){
-                        alert(data.updateMVDetails.response)
-                    }
+                }).catch((errors) => {
+                    console.log(errors);
+                    alert(errors.errors.message)
                 });
             }
         }

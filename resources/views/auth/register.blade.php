@@ -136,11 +136,17 @@
                 }).then(response => {
                     return response.json();
                 }).then(data => {
-                    alert(data.createUser.response);
-                    console.log(data);
+                    if (data){
+                        alert(data.data.createUser.response);
+                        console.log(data);
+                    }
+                    else{
+                        alert(data.errors.createUser.response);
+                    }
                 }).catch((error) => {
+                    alert(errors.errors.message)
                     console.log(error);
-                    alert('Save Failed')
+                    //alert('Save Failed')
                 });
             }
         }

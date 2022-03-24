@@ -8,7 +8,7 @@ type Query {
     users: [User!]! @all(model: "App\\Models\\User")
     user(id: ID @eq): User @find(model: "App\\Models\\User")
     motorVehicle(reg_no: String! @eq): MotorVehicle @find(model: "App\\Models\\MotorVehicle")
-    #motorVehicle(name: String! @eq): MotorVehicle @find(model: "App\\Models\\MotorVehicle")
+    userMotorVehicle(name: String! @where(operator: "=")): [MotorVehicle!]! @all(model: "App\\Models\\MotorVehicle")
     motorVehicles: [MotorVehicle!]! @all(model: "App\\Models\\MotorVehicle")
 
 }
