@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\User;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ResolveInfo;
 use http\Cookie;
@@ -31,7 +32,8 @@ class LoginResolver
         else {
 //            mutation
             //return ['request'=>'success'];
-            $user = auth()->user();
+            // $user = auth()->user();
+            $user = User::where('email', $args['data']['email'])->pluck('name');
             $token = Auth::user()->createToken('Access Token')->accessToken;
             //Cookie::queue('_token', $token, 1800, '/', $context->request->getHost(), false, true);
 
