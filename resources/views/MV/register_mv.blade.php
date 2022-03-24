@@ -121,13 +121,13 @@
                 }).then(data => {
                     console.log(data);
                     if (data){
-                        alert(data.createMotorVehicle.response);
+                        alert(data.response);
                     }
 
                 }).catch((error) => {
                     console.log(error);
                     if(error){
-                        alert(data.createMotorVehicle.response)
+                        alert(data.response)
                     }
                 });
             }
