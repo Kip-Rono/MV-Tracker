@@ -5,8 +5,8 @@ input LoginInput {
 
 type LoginResponse {
     token: String
-    user: User
-    message: String
+    name: User
+    response: String
 }
 
 input RegisterInput {
