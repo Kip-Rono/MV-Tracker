@@ -37,8 +37,8 @@ class LoginResolver
 
             return [
                 'token' => $token,
-                'name' => $user,
                 'response' => 'Login Successful'
+                //'name' => $user,
             ];
         }
         return ['request'=>'none'];
