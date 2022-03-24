@@ -54,11 +54,19 @@
 @push('custom-scripts')
     <script type="text/javascript">
         function listMVs(){
-            const name = document.getElementById('username')
+            const name = document.getElementById('username').value;
             const query = `
-
+                query($name: String!){
+                        userMotorVehicle(name: $name){
+                            name,
+                            reg_no,
+                            year_of_man,
+                            vehicle_type,
+                            tonnage
+                        }
+                    }
             `;
-            fetch("https://mvs-tracker.herokuapp.com/graphql", {
+            fetch("http://127.0.0.1:8000/graphql", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -67,16 +75,31 @@
                 body:JSON.stringify({
                     query,
                     variables: {
-                        input: {
-                            reg_no,
-                            name,
-                        }
+                        name: name,
                     }
                 })
             }).then(response => {
                 return response.json();
-            }).then(data => {
+            }).then((data) => {
                 console.log(data);
+                console.log(data.data.userMotorVehicle);
+                //populate table with data
+                    let table = document.getElementById('mv_list_tbl');
+
+                    for (let i = 0; i < data.data.userMotorVehicle.length; i++) {
+                        table.insertRow(1).innerHTML =
+                            '<tr>' +
+                            '<td>' + data.data.userMotorVehicle[i]['name'] + '</td>' +
+                            '<td>' + data.data.userMotorVehicle[i]['reg_no'] + '</td>' +
+                            '<td>' + data.data.userMotorVehicle[i]['year_of_man'] + '</td>' +
+                            '<td>' + data.data.userMotorVehicle[i]['vehicle_type'] + '</td>' +
+                            '<td>' + data.data.userMotorVehicle[i]['tonnage'] + '</td>' +
+                            '</tr>';
+                    }
+                //alert(data);
+            }).catch((errors) => {
+                console.log(errors);
+                //alert(data);
             });
         }
     </script>
