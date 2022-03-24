@@ -121,13 +121,15 @@
                 }).then(data => {
                     console.log(data);
                     if (data){
-                        alert(data.createMotorVehicle.response);
+                        //alert(data.createMotorVehicle.response);
+                        alert('MV Created Successfully');
                     }
 
                 }).catch((error) => {
                     console.log(error);
                     if(error){
-                        alert(data.createMotorVehicle.response)
+                        //alert(data.createMotorVehicle.response)
+                        alert('Save Fail !');
                     }
                 });
             }

@@ -135,9 +135,15 @@
                     })
                 }).then(response => {
                     return response.json();
-                }).then(data => {
-                    alert(data.createUser.response);
-                    console.log(data);
+                }).then((data) => {
+                    if (data){
+                        //alert(data.createUser.response);
+                        alert('User Created Successfully');
+                        console.log(data);
+                    }
+                    else{
+                        alert('User Save Fail');
+                    }
                 }).catch((error) => {
                     console.log(error);
                     //alert('Save Failed')

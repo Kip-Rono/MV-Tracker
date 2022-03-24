@@ -9,7 +9,7 @@
                         <label for="name" class="col-md-3 col-form-label text-md-end">Click To List:</label>
                         <div class="col-md-6">
                             <input id="username" type="text" class="form-control"
-                                   name="username"
+                                   name="username" placeholder="Enter Your Username"
                                    required autocomplete="name" autofocus>
                         </div>
                         <div class="col-md-3">
@@ -56,7 +56,11 @@
         function listMVs(){
             const name = document.getElementById('username')
             const query = `
-
+                query($name: String!){
+                        userMotorVehicle(name: $name){
+                            name, reg_no, year_of_man, vehicle_type, tonnage
+                        }
+                    }
             `;
             fetch("https://mvs-tracker.herokuapp.com/graphql", {
                 method: "POST",
@@ -67,16 +71,14 @@
                 body:JSON.stringify({
                     query,
                     variables: {
-                        input: {
-                            reg_no,
-                            name,
-                        }
+                        name: name,
                     }
                 })
-            }).then(response => {
+            }).then((response) => {
                 return response.json();
-            }).then(data => {
+            }).then((data) => {
                 console.log(data);
+                //populate table
             });
         }
     </script>

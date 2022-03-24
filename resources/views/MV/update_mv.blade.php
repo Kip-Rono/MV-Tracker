@@ -183,13 +183,16 @@
                 }).then(data => {
                     console.log(data);
                     if (data){
-                        alert(data.createMotorVehicle.response);
-                    }
+                        //alert(data.createMotorVehicle.response);
+                        alert('MV Details Updated');
 
+                    }else{
+                        alert('MV Details Update Fail');
+                    }
                 }).catch((error) => {
                     console.log(error);
                     if(error){
-                        alert(data.updateMVDetails.response)
+                        console.log(data);
                     }
                 });
             }
